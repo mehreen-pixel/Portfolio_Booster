@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiMenu } from "react-icons/fi"; // Added close icon
+import { FiMenu } from "react-icons/fi"; 
 import { ImCross } from "react-icons/im";
 export default function Header() {
   const [open, setOpen] = useState(false);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -14,26 +14,38 @@ const PrivateRoute = ({ children }) => {
   return token ? children : <Navigate to="/login" />;
 };
 
+function Layout({ children }) {
+  const location = useLocation();
+  const hideHeaderFooter = location.pathname.startsWith('/preview');
+
+  return (
+    <>
+      {!hideHeaderFooter && <Header />}
+      <main className="min-h-screen">{children}</main>
+      {!hideHeaderFooter && <Footer />}
+    </>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      {/* Header outside Routes */}
-      <Header />
+      <Layout>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-
-        {/* Private Routes */}
-        <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path="/templates" element={<PrivateRoute><TemplateSelector /></PrivateRoute>} />
-        <Route path="/editor" element={<PrivateRoute><Editor /></PrivateRoute>} />
-        <Route path="/preview/:userId" element={<Preview />} />
-      </Routes>
-
-      {/* Footer outside Routes */}
-      <Footer />
+          {/* Private Routes */}
+          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/templates" element={<PrivateRoute><TemplateSelector /></PrivateRoute>} />
+          <Route path="/editor" element={<PrivateRoute><Editor /></PrivateRoute>} />
+          
+          {/* Preview Route (no header/footer) */}
+          <Route path="/preview/:userId" element={<Preview />} />
+        </Routes>
+      </Layout>
     </BrowserRouter>
   );
 }
+

@@ -6,11 +6,13 @@ export default function Preview() {
   const { userId } = useParams();
   const [data, setData] = useState(null);
 
-  // ✅ Fetch portfolio (assuming /portfolio returns an array)
+  
   useEffect(() => {
     (async () => {
       try {
-        const res = await API.get('/portfolio');
+        // const res = await API.get('/portfolio');
+        const res = await API.get(`/portfolio/public/${userId}`);
+
         const portfolio = Array.isArray(res.data) ? res.data[0] : res.data;
         setData(portfolio);
       } catch (err) {
@@ -19,7 +21,7 @@ export default function Preview() {
     })();
   }, []);
 
-  // ✅ Delete handler
+  
  
 
 
@@ -29,7 +31,8 @@ export default function Preview() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-        <h1 className="text-3xl font-bold">{data.userName || 'Your Name'}</h1>
+         <h1 className="text-3xl font-bold">{data.user?.name || 'Your Name'}</h1>
+
         <p className="mt-2">{data.about}</p>
 
         <section className="mt-4">
@@ -63,7 +66,7 @@ export default function Preview() {
           </div>
         </section>
 
-        {/* ✅ Moved delete button OUTSIDE project loop */}
+       
         
       </div>
     </div>
